@@ -12,6 +12,7 @@ public:
 	/// Returns whether or not this node has a left child
 	/// </summary>
 	bool hasLeft();
+
 	/// <summary>
 	/// Returns whether or not this node has a right child
 	/// </summary>
@@ -21,6 +22,7 @@ public:
 	/// Returns the data this node contains 
 	/// </summary>
 	T getData();
+
 	/// <summary>
 	/// Gets the child to the left of this node
 	/// </summary>
@@ -58,5 +60,80 @@ private:
 	TreeNode<T>* m_right;
 };
 
+template<typename T>
+inline TreeNode<T>::TreeNode(T value)
+{
+	m_value = value;
+	m_right = nullptr;
+	m_left = nullptr;
+}
 
+template<typename T>
+inline bool TreeNode<T>::hasLeft()
+{
+	return m_left != nullptr;
+}
 
+template<typename T>
+inline bool TreeNode<T>::hasRight()
+{
+	return m_right != nullptr;
+}
+
+template<typename T>
+inline T TreeNode<T>::getData()
+{
+	return m_value;
+}
+
+template<typename T>
+inline TreeNode<T>* TreeNode<T>::getLeft()
+{
+	return m_left;
+}
+
+template<typename T>
+inline TreeNode<T>* TreeNode<T>::getRight()
+{
+	return m_right;
+}
+
+template<typename T>
+inline void TreeNode<T>::setData(T value)
+{
+	m_value = value;
+}
+
+template<typename T>
+inline void TreeNode<T>::setLeft(TreeNode<T>* node)
+{
+	m_left = node;
+}
+
+template<typename T>
+inline void TreeNode<T>::setRight(TreeNode<T>* node)
+{
+	m_right = node;
+}
+
+template<typename T>
+inline void TreeNode<T>::draw(int x, int y, bool selected)
+{
+	// Creates an array to store the string representation of the value.
+	static char buffer[10];
+
+	// Converts the value to a string and stores it in the array.
+	sprintf(buffer, "%d", m_value);
+
+	// Draws the circle to represent the node.
+	DrawCircle(x, y, 30, YELLOW);
+
+	// If the node is the current selected node, change its color.
+	if (selected)
+		DrawCircle(x, y, 28, GREEN);
+	else
+		DrawCircle(x, y, 28, BLACK);
+
+	// Draw the value of the node inside its circle.
+	DrawText(buffer, x - 12, y - 12, 12, WHITE);
+}
