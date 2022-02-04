@@ -108,8 +108,35 @@ inline void BinaryTree<T>::remove(T value)
 	if (findNode(value, currentNode, currentNodeParent)) {
 		if (!currentNode->hasLeft() && !currentNode->hasRight())
 			delete currentNode;
-		else if (currentNodeParent->getLeft() == currentNode) {
-
+		else if (currentNode->hasLeft() && currentNode->hasRight()) {
+			TreeNode<T>* nodeToDelete = currentNode->getRight();
+			TreeNode<T>* nodeToDeleteParent = new TreeNode<T>();
+			if (nodeToDelete->hasLeft()) {
+				nodeToDeleteParent = nodeToDelete;
+				nodeToDelete = nodeToDelete->getLeft();
+			} 
+			else {
+				currentNode->setData(nodeToDelete->getData());
+				if (nodeToDelete->hasRight())
+					nodeToDeleteParent->setLeft(nodeToDelete->getRight());
+				delete nodeToDelete;
+			}
+		}
+		else if (currentNodeParent->getLeft() == currentNode && currentNode->hasLeft()) {
+			currentNodeParent->setLeft(currentNode->getLeft());
+			delete currentNode;
+		}
+		else if (currentNodeParent->getLeft() == currentNode && currentNode->hasRight()) {
+			currentNodeParent->setLeft(currentNode->getRight());
+			delete currentNode;
+		}
+		else if (currentNodeParent->getRight() == currentNode && currentNode->hasLeft()) {
+			currentNodeParent->setRight(currentNode->getLeft());
+			delete currentNode;
+		}
+		else if (currentNodeParent->getRight() == currentNode && currentNode->hasRight()) {
+			currentNodeParent->setRight(currentNode->getRight());
+			delete currentNode;
 		}
 	}
 }
