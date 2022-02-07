@@ -110,6 +110,7 @@ inline void BinaryTree<T>::remove(T value)
 	TreeNode<T>* currentNode = nullptr;
 	TreeNode<T>* currentNodeParent = nullptr;
 	if (findNode(value, currentNode, currentNodeParent)) {
+		// Deleting a node with no children.
 		if (!(currentNode->hasLeft() || currentNode->hasRight())) {
 			if (!currentNodeParent)
 				m_root = nullptr;
@@ -120,6 +121,7 @@ inline void BinaryTree<T>::remove(T value)
 			delete currentNode;
 		}
 
+		// Deleting a node with two children.
 		else if (currentNode->hasLeft() && currentNode->hasRight()) {
 			TreeNode<T>* nodeToDelete = currentNode->getRight();
 			TreeNode<T>* nodeToDeleteParent = new TreeNode<T>();
@@ -127,12 +129,13 @@ inline void BinaryTree<T>::remove(T value)
 				nodeToDeleteParent = nodeToDelete;
 				nodeToDelete = nodeToDelete->getLeft();
 			}
-			if (nodeToDeleteParent->hasLeft())
-				nodeToDeleteParent->setLeft(nullptr);
+
 			currentNode->setData(nodeToDelete->getData());
 			delete nodeToDelete;
+			return;
 		}
 
+		// Deleting a node with one child.
 		else if (!currentNodeParent && currentNode->hasRight()) {
 			m_root = currentNode->getRight();
 			delete currentNode;
