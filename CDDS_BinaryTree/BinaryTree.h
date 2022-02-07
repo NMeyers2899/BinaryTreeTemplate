@@ -69,6 +69,10 @@ inline bool BinaryTree<T>::isEmpty() const
 template<typename T>
 inline void BinaryTree<T>::insert(T value)
 {
+	if (!m_root) {
+		m_root = new TreeNode<T>();
+	}
+
 	if (!m_root->getData()) {
 		m_root->setData(value);
 		return;
@@ -103,24 +107,39 @@ inline void BinaryTree<T>::insert(T value)
 template<typename T>
 inline void BinaryTree<T>::remove(T value)
 {
-	TreeNode<T>* currentNode;
-	TreeNode<T>* currentNodeParent;
+	TreeNode<T>* currentNode = nullptr;
+	TreeNode<T>* currentNodeParent = nullptr;
 	if (findNode(value, currentNode, currentNodeParent)) {
-		if (!currentNode->hasLeft() && !currentNode->hasRight())
+		if (!(currentNode->hasLeft() || currentNode->hasRight())) {
+			if (!currentNodeParent)
+				m_root = nullptr;
+			else if (currentNodeParent->getLeft() == currentNode)
+				currentNodeParent->setLeft(nullptr);
+			else if (currentNodeParent->getRight() == currentNode)
+				currentNodeParent->setRight(nullptr);
 			delete currentNode;
+		}
+
 		else if (currentNode->hasLeft() && currentNode->hasRight()) {
 			TreeNode<T>* nodeToDelete = currentNode->getRight();
 			TreeNode<T>* nodeToDeleteParent = new TreeNode<T>();
-			if (nodeToDelete->hasLeft()) {
+			while (nodeToDelete->hasLeft()) {
 				nodeToDeleteParent = nodeToDelete;
 				nodeToDelete = nodeToDelete->getLeft();
-			} 
-			else {
-				currentNode->setData(nodeToDelete->getData());
-				if (nodeToDelete->hasRight())
-					nodeToDeleteParent->setLeft(nodeToDelete->getRight());
-				delete nodeToDelete;
 			}
+			if (nodeToDeleteParent->hasLeft())
+				nodeToDeleteParent->setLeft(nullptr);
+			currentNode->setData(nodeToDelete->getData());
+			delete nodeToDelete;
+		}
+
+		else if (!currentNodeParent && currentNode->hasRight()) {
+			m_root = currentNode->getRight();
+			delete currentNode;
+		}
+		else if (!currentNodeParent && currentNode->hasLeft()) {
+			m_root = currentNode->getLeft();
+			delete currentNode;
 		}
 		else if (currentNodeParent->getLeft() == currentNode && currentNode->hasLeft()) {
 			currentNodeParent->setLeft(currentNode->getLeft());
@@ -172,8 +191,11 @@ inline bool BinaryTree<T>::findNode(T searchValue, TreeNode<T>*& nodeFound, Tree
 	bool isNodeFound = false;
 	nodeFound = m_root;
 	while (!isNodeFound) {
-		if (nodeFound->getData() == searchValue)
+		if (nodeFound->getData() == searchValue) {
+			if (m_root->getData() == searchValue)
+				nodeParent = nullptr;
 			isNodeFound = true;
+		}
 		else if (nodeFound->getData() < searchValue && nodeFound->hasRight()) {
 			nodeParent = nodeFound;
 			nodeFound = nodeFound->getRight();
@@ -185,6 +207,7 @@ inline bool BinaryTree<T>::findNode(T searchValue, TreeNode<T>*& nodeFound, Tree
 		else
 			return isNodeFound;
 	}
+	return isNodeFound;
 }
 
 template<typename T>
