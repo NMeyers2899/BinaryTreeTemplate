@@ -57,6 +57,7 @@ private:
 template<typename T>
 inline BinaryTree<T>::BinaryTree()
 {
+	m_root = nullptr;
 }
 
 template<typename T>
@@ -75,6 +76,7 @@ inline void BinaryTree<T>::insert(T value)
 	TreeNode<T>* nodeToInsert = new TreeNode<T>(value);
 	bool nodeInsert = false;
 
+	// While a node has not been inserted yet.
 	while (!nodeInsert) 
 	{
 		if (value > currentNode->getData()) 
