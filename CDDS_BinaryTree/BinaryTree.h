@@ -57,7 +57,6 @@ private:
 template<typename T>
 inline BinaryTree<T>::BinaryTree()
 {
-	m_root = new TreeNode<T>();
 }
 
 template<typename T>
@@ -70,12 +69,7 @@ template<typename T>
 inline void BinaryTree<T>::insert(T value)
 {
 	if (!m_root) {
-		m_root = new TreeNode<T>();
-	}
-
-	if (!m_root->getData()) {
-		m_root->setData(value);
-		return;
+		m_root = new TreeNode<T>(value);
 	}
 
 	TreeNode<T>* currentNode = m_root;
@@ -125,13 +119,28 @@ inline void BinaryTree<T>::remove(T value)
 		else if (currentNode->hasLeft() && currentNode->hasRight()) {
 			TreeNode<T>* nodeToDelete = currentNode->getRight();
 			TreeNode<T>* nodeToDeleteParent = new TreeNode<T>();
-			while (nodeToDelete->hasLeft()) {
-				nodeToDeleteParent = nodeToDelete;
-				nodeToDelete = nodeToDelete->getLeft();
+			if (nodeToDelete->hasLeft()) {
+				while (nodeToDelete->hasLeft()) {
+					nodeToDeleteParent = nodeToDelete;
+					nodeToDelete = nodeToDelete->getLeft();
+				}
+				currentNode->setData(nodeToDelete->getData());
+				if (nodeToDelete->hasRight())
+					nodeToDeleteParent->setLeft(nodeToDelete->getRight());
+				else
+					nodeToDeleteParent->setLeft(nullptr);
+				delete nodeToDelete;
 			}
-
-			currentNode->setData(nodeToDelete->getData());
-			delete nodeToDelete;
+			else if (nodeToDelete->hasRight()) {
+				currentNode->setData(nodeToDelete->getData());
+				currentNode->setRight(nodeToDelete->getRight());
+				delete nodeToDelete;
+			}
+			else {
+				currentNode->setData(nodeToDelete->getData());
+				currentNode->setRight(nullptr);
+				delete nodeToDelete;
+			}
 			return;
 		}
 
@@ -193,6 +202,10 @@ inline bool BinaryTree<T>::findNode(T searchValue, TreeNode<T>*& nodeFound, Tree
 {
 	bool isNodeFound = false;
 	nodeFound = m_root;
+
+	if (nodeFound == nullptr)
+		return isNodeFound;
+
 	while (!isNodeFound) {
 		if (nodeFound->getData() == searchValue) {
 			if (m_root->getData() == searchValue)
