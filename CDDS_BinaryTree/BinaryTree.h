@@ -68,16 +68,17 @@ inline bool BinaryTree<T>::isEmpty() const
 template<typename T>
 inline void BinaryTree<T>::insert(T value)
 {
-	if (!m_root) {
+	if (!m_root) 
 		m_root = new TreeNode<T>(value);
-	}
 
 	TreeNode<T>* currentNode = m_root;
 	TreeNode<T>* nodeToInsert = new TreeNode<T>(value);
 	bool nodeInsert = false;
 
-	while (!nodeInsert) {
-		if (value > currentNode->getData()) {
+	while (!nodeInsert) 
+	{
+		if (value > currentNode->getData()) 
+		{
 			if (currentNode->hasRight())
 				currentNode = currentNode->getRight();
 			else{
@@ -85,10 +86,12 @@ inline void BinaryTree<T>::insert(T value)
 				nodeInsert = true;
 			}
 		}
-		else if (value < currentNode->getData()) {
+		else if (value < currentNode->getData()) 
+		{
 			if (currentNode->hasLeft())
 				currentNode = currentNode->getLeft();
-			else {
+			else 
+			{
 				currentNode->setLeft(nodeToInsert);
 				nodeInsert = true;
 			}
@@ -103,9 +106,11 @@ inline void BinaryTree<T>::remove(T value)
 {
 	TreeNode<T>* currentNode = nullptr;
 	TreeNode<T>* currentNodeParent = nullptr;
-	if (findNode(value, currentNode, currentNodeParent)) {
+	if (findNode(value, currentNode, currentNodeParent)) 
+	{
 		// Deleting a node with no children.
-		if (!(currentNode->hasLeft() || currentNode->hasRight())) {
+		if (!(currentNode->hasLeft() || currentNode->hasRight())) 
+		{
 			if (!currentNodeParent)
 				m_root = nullptr;
 			else if (currentNodeParent->getLeft() == currentNode)
@@ -116,11 +121,14 @@ inline void BinaryTree<T>::remove(T value)
 		}
 
 		// Deleting a node with two children.
-		else if (currentNode->hasLeft() && currentNode->hasRight()) {
+		else if (currentNode->hasLeft() && currentNode->hasRight()) 
+		{
 			TreeNode<T>* nodeToDelete = currentNode->getRight();
 			TreeNode<T>* nodeToDeleteParent = new TreeNode<T>();
-			if (nodeToDelete->hasLeft()) {
-				while (nodeToDelete->hasLeft()) {
+			if (nodeToDelete->hasLeft()) 
+			{
+				while (nodeToDelete->hasLeft()) 
+				{
 					nodeToDeleteParent = nodeToDelete;
 					nodeToDelete = nodeToDelete->getLeft();
 				}
@@ -131,12 +139,14 @@ inline void BinaryTree<T>::remove(T value)
 					nodeToDeleteParent->setLeft(nullptr);
 				delete nodeToDelete;
 			}
-			else if (nodeToDelete->hasRight()) {
+			else if (nodeToDelete->hasRight()) 
+			{
 				currentNode->setData(nodeToDelete->getData());
 				currentNode->setRight(nodeToDelete->getRight());
 				delete nodeToDelete;
 			}
-			else {
+			else 
+			{
 				currentNode->setData(nodeToDelete->getData());
 				currentNode->setRight(nullptr);
 				delete nodeToDelete;
@@ -145,27 +155,33 @@ inline void BinaryTree<T>::remove(T value)
 		}
 
 		// Deleting a node with one child.
-		else if (!currentNodeParent && currentNode->hasRight()) {
+		else if (!currentNodeParent && currentNode->hasRight()) 
+		{
 			m_root = currentNode->getRight();
 			delete currentNode;
 		}
-		else if (!currentNodeParent && currentNode->hasLeft()) {
+		else if (!currentNodeParent && currentNode->hasLeft()) 
+		{
 			m_root = currentNode->getLeft();
 			delete currentNode;
 		}
-		else if (currentNodeParent->getLeft() == currentNode && currentNode->hasLeft()) {
+		else if (currentNodeParent->getLeft() == currentNode && currentNode->hasLeft()) 
+		{
 			currentNodeParent->setLeft(currentNode->getLeft());
 			delete currentNode;
 		}
-		else if (currentNodeParent->getLeft() == currentNode && currentNode->hasRight()) {
+		else if (currentNodeParent->getLeft() == currentNode && currentNode->hasRight()) 
+		{
 			currentNodeParent->setLeft(currentNode->getRight());
 			delete currentNode;
 		}
-		else if (currentNodeParent->getRight() == currentNode && currentNode->hasLeft()) {
+		else if (currentNodeParent->getRight() == currentNode && currentNode->hasLeft()) 
+		{
 			currentNodeParent->setRight(currentNode->getLeft());
 			delete currentNode;
 		}
-		else if (currentNodeParent->getRight() == currentNode && currentNode->hasRight()) {
+		else if (currentNodeParent->getRight() == currentNode && currentNode->hasRight()) 
+		{
 			currentNodeParent->setRight(currentNode->getRight());
 			delete currentNode;
 		}
@@ -177,7 +193,8 @@ inline TreeNode<T>* BinaryTree<T>::find(T value)
 {
 	TreeNode<T>* currentNode = m_root;
 	bool breakLoop = false;
-	while (!breakLoop) {
+	while (!breakLoop) 
+	{
 		if (currentNode->getData() == value)
 			return currentNode;
 		else if (currentNode->getData() < value && currentNode->hasRight())
@@ -207,16 +224,19 @@ inline bool BinaryTree<T>::findNode(T searchValue, TreeNode<T>*& nodeFound, Tree
 		return isNodeFound;
 
 	while (!isNodeFound) {
-		if (nodeFound->getData() == searchValue) {
+		if (nodeFound->getData() == searchValue) 
+		{
 			if (m_root->getData() == searchValue)
 				nodeParent = nullptr;
 			isNodeFound = true;
 		}
-		else if (nodeFound->getData() < searchValue && nodeFound->hasRight()) {
+		else if (nodeFound->getData() < searchValue && nodeFound->hasRight())
+		{
 			nodeParent = nodeFound;
 			nodeFound = nodeFound->getRight();
 		}
-		else if (nodeFound->getData() > searchValue && nodeFound->hasLeft()) {
+		else if (nodeFound->getData() > searchValue && nodeFound->hasLeft()) 
+		{
 			nodeParent = nodeFound;
 			nodeFound = nodeFound->getLeft();
 		}
@@ -233,10 +253,12 @@ inline void BinaryTree<T>::draw(TreeNode<T>* currentNode, int x, int y, int hori
 	horizontalSpacing /= 2;
 
 	// Check if the currentnode is null.
-	if (currentNode) {
+	if (currentNode) 
+	{
 
 		// Draws the left child if this node has one.
-		if (currentNode->hasLeft()) {
+		if (currentNode->hasLeft()) 
+		{
 			// Draws a line between the left child and the current node.
 			DrawLine(x, y, x - horizontalSpacing, y + 80, RED);
 			// Draws the left child.
@@ -244,7 +266,8 @@ inline void BinaryTree<T>::draw(TreeNode<T>* currentNode, int x, int y, int hori
 		}
 
 		// Draws the right child if this node has one.
-		if (currentNode->hasRight()) {
+		if (currentNode->hasRight()) 
+		{
 			// Draws a line between the right child and the current node.
 			DrawLine(x, y, x + horizontalSpacing, y + 80, RED);
 			// Draws the right child.
