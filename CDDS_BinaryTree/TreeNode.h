@@ -4,8 +4,19 @@ template<typename T>
 class TreeNode
 {
 public:
-	TreeNode() {};
+	/// <summary>
+	/// Creates a basic tree node with no data, no left, and no right.
+	/// </summary>
+	TreeNode();
+
+	/// <summary>
+	/// Creates a tree node that holds the given value.
+	/// </summary>
 	TreeNode(T value);
+
+	/// <summary>
+	/// Is called upon the deletion of a tree node.
+	/// </summary>
 	~TreeNode() {};
 
 	/// <summary>
@@ -59,6 +70,13 @@ private:
 	TreeNode<T>* m_left;
 	TreeNode<T>* m_right;
 };
+
+template<typename T>
+inline TreeNode<T>::TreeNode()
+{
+	m_left = nullptr;
+	m_right = nullptr;
+}
 
 template<typename T>
 inline TreeNode<T>::TreeNode(T value)
